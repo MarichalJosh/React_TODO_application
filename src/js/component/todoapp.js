@@ -6,21 +6,26 @@ export const TodoApp = () => {
 	const addTarea = tarea => {
 		if (tarea.key === "Enter") {
 			setLista([...lista, tarea.target.value]);
+			tarea.target.value = "";
 		}
 	};
 
-	const items = [];
-
-	for (const [index, value] of lista.entries()) {
-		items.push(
-			<li className="list-group-item" key={index}>
-				{value}
-				<button className="btn btn-default btn-xs pull-right remove-item">
-					<i className="fas fa-trash-alt text-danger mx-2"></i>
-				</button>
-			</li>
-		);
+	function delTarea(pos) {
+		const tempList = [...lista];
+		tempList.splice(pos, 1);
+		setLista(tempList);
 	}
+
+	const newList = lista.map((value, index) => (
+		<li className="list-group-item" key={index}>
+			{value}
+			<button
+				onClick={() => delTarea(index)}
+				className="btn btn-default remove-item float-end">
+				<i className="fas fa-trash-alt text-danger mx-2"></i>
+			</button>
+		</li>
+	));
 
 	return (
 		<div className="text-center mt-5">
@@ -34,10 +39,11 @@ export const TodoApp = () => {
 							type="text"
 							placeholder="Add a thing"></input>
 						<br />
-						<ul className="list-group">{items}</ul>
+						<ul className="list-group">{newList}</ul>
 					</div>
 				</div>
 			</div>
+			<p>Total Items: {lista.length}</p>
 		</div>
 	);
 };
